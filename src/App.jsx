@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Layout } from "antd";
 import { Navbar, CryptoDetails, Cryptocurrencies, Home } from "./components";
 import "./App.css";
@@ -10,20 +10,16 @@ const App = () => {
       <div className="navbar">
         <Navbar />
       </div>
-
       <div className="main">
         <Layout>
           <div className="routes">
             <Routes>
               <Route path="/" element={<Home />} />
-
-              <Route element={<Cryptocurrencies />} path="/cryptocurrencies" />
-
-              <Route element={<CryptoDetails />} path="/crypto/:coinId" />
+              <Route path="/cryptocurrencies" element={<Cryptocurrencies />} />
+              <Route path="/crypto/:coinId" element={<CryptoDetails />} />
             </Routes>
           </div>
         </Layout>
-
         <div className="footer">
           <h1 className="footer-heading">
             Beyond the Banks: The Rise of Cryptocurrency <br />

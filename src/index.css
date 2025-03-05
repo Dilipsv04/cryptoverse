@@ -1,0 +1,33 @@
+body {
+    background-color: #ffffff;
+    color: #000000;
+  }
+  
+  /* Dark mode styles */
+  body.dark {
+    background-color: #121212;
+    color: #faf6f6;
+  }
+  
+  /* Example for Ant Design cards */
+  body.dark .ant-card {
+    background-color: #1e1e1e;
+    color: #faf3f3;
+  }
+
+  body.dark .nav-container {
+    background-color: #1e1e1e;
+    color: #faf3f3;
+  }
+body.dark *{  
+     background-color: #1e1e1e;
+    color: #faf3f3;
+}
+body.dark .texcol .ant-statistic-title,
+body.dark .texcol .ant-statistic-content {
+  color: #ffffff !important;
+}
+body.dark .ant-select-selector {
+  background-color: #1f1e1e !important;
+}
+  

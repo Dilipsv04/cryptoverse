@@ -94,7 +94,7 @@ const Home = () => {
       <Title level={2} className="heading">
         Global Crypto Stats
       </Title>
-      <Row>
+      <Row className="texcol">
         <Col span={12}>
           <Statistic title="Total Cryptocurrencies" value={stats?.totalCoins || 0} />
         </Col>

@@ -1,45 +1,36 @@
-import React, { useState, useEffect } from "react";
-import { Button, Menu, Typography, Avatar } from "antd";
+import React, { useState, useEffect, useContext } from "react";
+import { Button, Typography, Avatar, Switch } from "antd";
 import { Link } from "react-router-dom";
-import {
-  HomeOutlined,
-  MoneyCollectOutlined,
-  BulbOutlined,
-  FundOutlined,
-  MenuOutlined,
-} from "@ant-design/icons";
-
+import { HomeOutlined, FundOutlined, MenuOutlined } from "@ant-design/icons";
 import icon from "../assets/cryptocurrency.png";
+import { ThemeContext } from "../Themecontxt"; // Correct import
+
+const { Title } = Typography;
 
 const Navbar = () => {
   const [activeMenu, setActiveMenu] = useState(true);
   const [screenSize, setScreenSize] = useState(undefined);
+  const { darkMode, setDarkMode } = useContext(ThemeContext);
 
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth);
-
     window.addEventListener("resize", handleResize);
-
     handleResize();
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
-    if (screenSize <= 800) {
-      setActiveMenu(false);
-    } else {
-      setActiveMenu(true);
-    }
+    setActiveMenu(screenSize > 800);
   }, [screenSize]);
 
   return (
     <div className="nav-container">
       <div className="logo-container">
         <Avatar src={icon} size="large" />
-        <Typography.Title level={4} className="logo">
+        {/* Add "gradient-text" in dark mode */}
+        <Title level={4} className={`logo ${darkMode ? "gradient-text" : ""}`}>
           <Link to="/">Cryptoverse</Link>
-        </Typography.Title>
+        </Title>
         <Button
           className="menu-control-container"
           onClick={() => setActiveMenu(!activeMenu)}
@@ -61,6 +52,10 @@ const Navbar = () => {
             <Link className="link" to="/cryptocurrencies">
               Cryptocurrencies
             </Link>
+          </li>
+          <li className="menu-item">
+            {/* Dark Mode Toggle */}
+            <Switch checked={darkMode} onChange={(checked) => setDarkMode(checked)} />
           </li>
         </ul>
       )}
