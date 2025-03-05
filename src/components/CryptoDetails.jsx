@@ -23,17 +23,20 @@ const { Option } = Select;
 
 const CryptoDetails = () => {
   const { coinId } = useParams();
-  const [timePeriod, setTimePeriod] = useState("5y");
+  // Default time period is "7d"
+  const [timePeriod, setTimePeriod] = useState("7d");
   const [coinHistory, setCoinHistory] = useState([]);
+
+  // Currency toggle state: "USD" or "INR"
+  const [currency, setCurrency] = useState("USD");
+  // Example conversion factor: 1 USD = 75 INR (adjust as needed)
+  const conversionFactor = currency === "INR" ? 75 : 1;
 
   const { data: coinHistoryData, error: historyError } = useGetCryptoHistoryQuery({ coinId, timePeriod });
   const { data, isFetching, error: detailsError } = useGetCryptoDetailsQuery(coinId);
 
   useEffect(() => {
-    // Add fallback for undefined data
-
-    
-    console.log("coinHistoryData?.data",coinHistoryData?.data);
+    console.log("coinHistoryData", coinHistoryData);
     setCoinHistory(coinHistoryData || []);
   }, [coinHistoryData]);
 
@@ -45,10 +48,11 @@ const CryptoDetails = () => {
   const time = ["3h", "24h", "7d", "30d", "1y", "3m", "3y", "5y"];
   const volume = cryptoDetails?.["24hVolume"];
 
+  // For stats display, we still show milified values.
   const stats = [
     {
-      title: "Price to USD",
-      value: `$ ${millify(cryptoDetails?.price || 0)}`, // Added fallback
+      title: "Price",
+      value: `${currency === "USD" ? "$" : "₹"} ${millify((cryptoDetails?.price || 0) * conversionFactor)}`,
       icon: <DollarCircleOutlined />,
     },
     { 
@@ -58,17 +62,17 @@ const CryptoDetails = () => {
     },
     {
       title: "24h Volume",
-      value: `$ ${millify(volume || 0)}`, // Added fallback
+      value: `${currency === "USD" ? "$" : "₹"} ${millify((volume || 0) * conversionFactor)}`,
       icon: <ThunderboltOutlined />,
     },
     {
       title: "Market Cap",
-      value: `$ ${millify(cryptoDetails?.marketCap || 0)}`, // Added fallback
+      value: `${currency === "USD" ? "$" : "₹"} ${millify((cryptoDetails?.marketCap || 0) * conversionFactor)}`,
       icon: <DollarCircleOutlined />,
     },
     {
-      title: "All-time-high(daily avg.)",
-      value: `$ ${millify(cryptoDetails?.allTimeHigh?.price || 0)}`, // Added fallback
+      title: "All-time-high (daily avg.)",
+      value: `${currency === "USD" ? "$" : "₹"} ${millify((cryptoDetails?.allTimeHigh?.price || 0) * conversionFactor)}`,
       icon: <TrophyOutlined />,
     },
   ];
@@ -91,16 +95,16 @@ const CryptoDetails = () => {
     },
     {
       title: "Total Supply",
-      value: `$ ${millify(cryptoDetails?.supply?.total || 0)}`, // Added fallback
+      value: `${currency === "USD" ? "$" : "₹"} ${millify((cryptoDetails?.supply?.total || 0) * conversionFactor)}`,
       icon: <ExclamationCircleOutlined />,
     },
     {
       title: "Circulating Supply",
-      value: `$ ${millify(cryptoDetails?.supply?.circulating || 0)}`, // Added fallback
+      value: `${currency === "USD" ? "$" : "₹"} ${millify((cryptoDetails?.supply?.circulating || 0) * conversionFactor)}`,
       icon: <ExclamationCircleOutlined />,
     },
   ];
-  console.log("coinHistoryData3222",coinHistoryData);
+
   return (
     <Col className="coin-detail-container">
       <Col className="coin-heading-container">
@@ -108,29 +112,47 @@ const CryptoDetails = () => {
           {cryptoDetails?.name || "Unknown Coin"}
         </Title>
         <p>
-          {cryptoDetails?.name || "This cryptocurrency"} live price in US dollars. 
+          {cryptoDetails?.name || "This cryptocurrency"} live price in {currency}. 
           View value statistics, market cap, and supply.
         </p>
       </Col>
 
-      <Select
-        defaultValue="5y"
-        className="select-timeperiod"
-        placeholder="Select Time Period"
-        onChange={(value) => setTimePeriod(value)}
-      >
-        {time.map((date) => (
-          <Option key={date}>{date}</Option>
-        ))}
-      </Select>
+      <Row style={{ marginBottom: "20px" }}>
+        <Col span={12}>
+          {/* Currency Toggle */}
+          <Select defaultValue="USD" onChange={(value) => setCurrency(value)}>
+            <Option value="USD">USD</Option>
+            <Option value="INR">INR</Option>
+          </Select>
+        </Col>
+        <Col span={12}>
+          {/* Time Period Selection */}
+          <Select
+            defaultValue="7d"
+            className="select-timeperiod"
+            placeholder="Select Time Period"
+            onChange={(value) => setTimePeriod(value)}
+          >
+            {time.map((date) => (
+              <Option key={date}>{date}</Option>
+            ))}
+          </Select>
+        </Col>
+      </Row>
 
+      {/* 
+          IMPORTANT: Pass the raw price (not a millified string) to LineChart 
+          so that multiplication works correctly.
+      */}
       <LineChart
-        currentPrice={millify(cryptoDetails?.price || 0)} // Added fallback
+        currentPrice={Number(cryptoDetails?.price) || 0}
         coinHistory={coinHistoryData}
         coinName={cryptoDetails?.name || "Unknown"}
+        conversionFactor={conversionFactor}
+        currency={currency}
       />
 
-<Col className="stats-container">
+      <Col className="stats-container">
         <Col className="coin-value-statistics">
           <Col className="coin-value-statistics-heading">
             <Title level={3} className="coin-details-heading">
@@ -170,7 +192,7 @@ const CryptoDetails = () => {
 
       <Col className="coin-desc-link">
         <Row className="coin-desc">
-        <Title level={3} className="coin-details-heading">
+          <Title level={3} className="coin-details-heading">
             What is {cryptoDetails?.name}?
           </Title>
           <Text>{HTMLReactParser(cryptoDetails?.description || "No description available.")}</Text>
@@ -195,6 +217,5 @@ const CryptoDetails = () => {
     </Col>
   );
 };
-
 
 export default CryptoDetails;
