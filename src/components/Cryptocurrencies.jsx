@@ -26,8 +26,8 @@ const Cryptocurrencies = ({ simplified }) => {
   return (
     <>
       {!simplified && (
-        <div className="search-crypto" style={{ marginBottom: "20px" }}>
-          <Input
+        <div className="search-crypto" style={{ marginBottom: "20px"}}>
+          <Input className="poscol"
             placeholder="Search Cryptocurrency"
             onChange={(e) => setSearchTerm(e.target.value)}
           />

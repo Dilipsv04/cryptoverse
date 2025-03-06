@@ -30,4 +30,6 @@ body.dark .texcol .ant-statistic-content {
 body.dark .ant-select-selector {
   background-color: #1f1e1e !important;
 }
-  
+body.dark .poscol::placeholder {
+    color: #faf6f6 !important;
+  }
