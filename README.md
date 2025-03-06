@@ -1,8 +1,5 @@
-# React + Vite
+cryptoverse
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1.npm install vite/npm i
+2.".env"(rename and add api keys "env.txt"=>".env")(coinrankingAPI from rapidapi hub)
+3.npm run dev/npm start(localhost:5172/localhost3000)
