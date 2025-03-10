@@ -1,4 +1,5 @@
-cryptoverse
+Cryptoverse
+
 
 1.npm install vite/npm i
 
